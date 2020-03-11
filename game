@@ -1,0 +1,197 @@
+
+var time = 0
+var e = [false, false, false, false];
+var ball_s =3
+var star_s=6
+var score = 0
+var lives = 3
+var star_show = [randomNumber(10,18),randomNumber(20,28),randomNumber(32,40),randomNumber(42,50),randomNumber(52,60)]
+var easteregg=[false,false,false,false,false,false]
+var moveup = 0
+
+
+
+
+function ball_collision(ball10){
+ if(getXPosition(ball10)+getProperty(ball10, "width")>=(getXPosition("image1"))&&getXPosition(ball10)<=getXPosition("image1")+getProperty("image1", "width"))
+ {      
+   if(getYPosition(ball10)+getProperty(ball10, "height")-22>=getYPosition("image1") && getYPosition(ball10)<=getYPosition("image1")+getProperty("image1","height"))
+   {
+     
+     setPosition(ball10,randomNumber(55,255),45)
+     score= score+50
+     
+ }
+ }
+//end of function
+}
+
+function ground(ball10){
+ if((getYPosition(ball10) >365  )){
+   lives = lives-1
+   setPosition(ball10,randomNumber(50,270),35)
+   setText("text_input1","Lives: " + lives)
+ }
+};
+
+
+function falling(ball10){
+
+
+if(time>50){
+ball_s=3.8
+} else if(time>35){
+ball_s=3.5
+} else if (time>25){
+ball_s=3.3
+} else if (time>10){
+ball_s=3.1
+}
+setPosition(ball10,getXPosition(ball10),getYPosition(ball10)+ball_s)
+
+}
+
+function star_collision(star10){
+ if(getXPosition("star")+getProperty("star", "width")>=(getXPosition("image1"))&&getXPosition("star")<=getXPosition("image1")+getProperty("image1", "width"))
+ {      
+   if(getYPosition("star")+getProperty("star", "height")>=getYPosition("image1") && getYPosition("star")<=getYPosition("image1")+getProperty("image1","height"))
+   {
+     setPosition("star",randomNumber(40,280),3000)
+     score = score+100
+   }
+ }
+}
+
+function shootingstar(){
+setPosition("star",getXPosition("star"),getYPosition("star")+star_s)
+}
+
+
+
+//add another ball, make bombs with collision to make you lose, dont make the star do damage but istead let it be a bonus
+
+//======================= Dropping Objects ============================
+ onEvent("begin", "click", function( ) {
+setScreen("screen1")
+setPosition("image1",125,355)
+timedLoop(1000, function(){
+time = time+1
+setText("label2","time : " + time+"s")
+})
+
+
+ timedLoop(35,function(){
+  
+
+
+   ground("ball")
+   ground("ball2")
+   ground("ball3")
+   falling("ball")
+   falling("ball2")
+   falling("ball3")
+   ball_collision("ball")
+   ball_collision("ball2")
+   ball_collision("ball3")
+   shootingstar()
+   star_collision()
+   movement()
+   setText("hello","Score:"+ score)
+   if(lives==0){
+     setScreen("screen2")
+   }
+   
+
+ })
+ 
+ });
+
+
+//-----------second drop--------------
+
+
+timedLoop(1000,function(show){
+  
+if(time== star_show[0]){
+  setPosition("star",randomNumber(50,280),100)
+}
+if(time == star_show[1]){
+  setPosition("star",randomNumber(50,280),100)
+}
+if(time == star_show[2]){
+  setPosition("star",randomNumber(50,280),100)
+}
+if(time== star_show[3]){
+  setPosition("star",randomNumber(50,280),100)
+}
+});
+
+
+//----------third object basically another fckng ball ------
+
+//======================= Dropping Objects ============================
+
+//=======================MOVEMENT================================
+  function movement() {
+    xVel = 0;
+    yVel = 0;
+    if (e[0]&& getXPosition("image1")>-1) {
+      xVel += -5;
+    }
+    if (e[1]&& getXPosition("image1")< 265) {
+      xVel += 5;
+    }
+    if (e[2]) {
+      yVel += moveup;
+    }
+    if (e[3]&& getYPosition("image1")< 340) {
+      yVel += 2.5;
+    }
+    setPosition("image1", getXPosition("image1")+xVel, getYPosition("image1")+yVel);
+  }
+onEvent("screen1", "keydown", function(event) {
+  if (event.key == "Up") {
+    e[2] = true;
+  } else if ((event.key == "Down")) {
+    e[3] = true;
+  } else if ((event.key == "Left")) {
+    e[0] = true;
+  } else if ((event.key == "Right")) {
+    e[1] = true;
+  }
+});
+onEvent("screen1", "keyup", function(event) {
+  if (event.key == "Up") {
+    e[2] = false;
+  } else if ((event.key == "Down")) {
+    e[3] = false;
+  } else if ((event.key == "Left")) {
+    e[0] = false;
+  } else if ((event.key == "Right")) {
+    e[1] = false;
+  }
+});
+
+//====================== Movement ===============================
+
+//======================= Other things ========================
+setPosition("star",100,1000)
+
+onEvent("egg","click",function(event){
+  moveup = -2.5
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
